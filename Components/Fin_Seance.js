@@ -58,7 +58,7 @@ class Fin_Seance extends Component {
 
         sportExisteDeja : false,
 
-        tabSport : [],
+        tabSport : this.props.navigation.state.params.itemTabSport,
 
         name : this.props.navigation.state.params.itemSport
 
@@ -75,7 +75,7 @@ class Fin_Seance extends Component {
     const getInfoJSON = RequestSport.getRequest();
     getInfoJSON.then(respJson => {
       //set array state sport
-      this.setState({tabSport: respJson.reverse()});
+      this.setState({tab: respJson.reverse()});
       /* this.state.tabSport.forEach(function(element) {
         if(element.name === this.state.sport){
           this.setState.sportExisteDeja = true
@@ -84,6 +84,20 @@ class Fin_Seance extends Component {
     }).catch(err => console.log(err));
 
   }
+
+  _traitement(){
+      let sportExiste = false
+      let sport = this.state.sport
+      console.log("tabSport::", this.state.tabSport)
+      console.log("Sport::", this.state.sport)
+      this.state.tabSport.forEach(function(element) {
+        if(element == sport){
+          sportExiste = true;
+        }
+    })
+    console.log("existance", sportExiste)
+    return sportExiste;
+  } 
 
 
   //Cette méthode sera appelée lorsque l'utilisateur décidera d'appuyer sur le bouton d'envoi
@@ -143,11 +157,11 @@ class Fin_Seance extends Component {
   }
 
 
-  submitSport = () => {
+  submitSport = (userId) => {
     let request;
     const {id,name} = this.state; //ajouter nbrKm et duree
 
-    const submittedSport = {name};
+    const submittedSport = {name,userId};
     RequestSport.postRequest(submittedSport);
     console.log(name);
 
@@ -196,13 +210,13 @@ class Fin_Seance extends Component {
     //Si id est vide, nous ajoutons une nouvelle activité.
 
     if(id === '' || id === undefined){
-      //if (this.state.sportExisteDeja){
-        this.submitSport();
+        if (!this._traitement()){
+        this.submitSport(userId);
        
         request = Requests.postRequest(submittedActivites);
-     // } else{
-       // request = Requests.postRequest(submittedActivites);
-     // }
+      } else{
+        request = Requests.postRequest(submittedActivites);
+      }
 
 
     //Sinon, nous mettons à jour une activité

@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import {View,Text,Picker,StyleSheet,TouchableHighlight} from "react-native";
 
 import DialogInput from "react-native-dialog-input";
-import ListSport from './pickerSport';
+import {AsyncStorage} from 'react-native';
 
 
 
@@ -61,9 +61,11 @@ class Seance extends Component {
   }
 
 
-    componentDidMount(){
+    componentDidMount = async () =>{
     //Requete sport
-    const getInfoJSON = Requests.getRequest();
+    let userId = await AsyncStorage.getItem('id');
+    console.log("Voici Mon ID::", userId)
+    const getInfoJSON = Requests.getRequest(userId);
     getInfoJSON.then(respJson => {
       //set state sport
       this.setState({tabSport: respJson.reverse()});
@@ -77,10 +79,11 @@ class Seance extends Component {
 
   }  
  traitement= ()=>{
-   let act = [];
+   let act = ["Marche", "Natation", "Course"];
   this.state.tabSport.forEach(function(element) {
     act.push(element.name);
 })
+ console.log("Listes de sport", act)
  return act = [...new Set(act)];
  }
 
@@ -192,7 +195,8 @@ class Seance extends Component {
 
   _displayFinSeance() {
    this.traitement();
-    this.props.navigation.navigate("Chrono", {itemSport: this.state.sport, itemDouleurAvant: this.state.douleurAvant, itemZoneDouleurAvant: this.state.zoneDouleurAvant});
+    this.props.navigation.navigate("Chrono", {itemSport: this.state.sport, itemDouleurAvant: this.state.douleurAvant, 
+        itemZoneDouleurAvant: this.state.zoneDouleurAvant, itemTabSport : this.state.tabSportFiltre});
 
   }
 

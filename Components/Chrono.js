@@ -36,6 +36,8 @@ class Chrono extends React.Component {
 
         zoneDouleurAvant: this.props.navigation.state.params.itemZoneDouleurAvant,
 
+        tabSport : this.props.navigation.state.params.itemTabSport,
+
         //data chrono
 
         isRunning: false,
@@ -50,7 +52,10 @@ class Chrono extends React.Component {
 
   _displayFinSeance() {
 
-    this.props.navigation.navigate("Fin_Seance", {itemSport: this.state.sport, itemDouleurAvant: this.state.douleurAvant, itemZoneDouleurAvant: this.state.zoneDouleurAvant,itemChrono: this.state.mainTimer});
+    this.props.navigation.navigate("Fin_Seance", {itemSport: this.state.sport, itemDouleurAvant: this.state.douleurAvant, 
+      itemZoneDouleurAvant: this.state.zoneDouleurAvant,
+      itemTabSport : this.state.tabSport,
+      itemChrono: this.state.mainTimer});
 
   };
 

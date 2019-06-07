@@ -9,8 +9,9 @@ const fetchHeaders = {
 var RequestSport = {
 
 	//GET
-	getRequest: () => {
-		return fetch(API_URL).then(resp => resp.json());
+	getRequest: (userId) => {
+		const requestURL = `${API_URL}/${userId}`;
+		return fetch(requestURL).then(resp => resp.json());
 	},
 
 	//POST
