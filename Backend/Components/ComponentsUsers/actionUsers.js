@@ -61,7 +61,7 @@ module.exports = {
   console.log("blabla")
 
 processUsers.loginUser(user)
-   .then((err,result)=>{
+   .then((result)=>{
         let token = jwt.encode(result,config.secret);
       console.log("Identifiant", result._id)
        res.status(200).json({
@@ -69,7 +69,7 @@ processUsers.loginUser(user)
            "token" :token,
            "id" : result._id 
         }) 
-        console.log(err)
+       
    })
 .catch((typeErr)=>{
   console.log("Wadi",typeErr)

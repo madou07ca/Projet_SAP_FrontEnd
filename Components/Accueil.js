@@ -3,6 +3,9 @@ import { Alert, StyleSheet, Text, View, TouchableHighlight, Image} from 'react-n
 import PureChart from 'react-native-pure-chart';
 
 import Requests from './../Requests'
+
+//import RNHTMLtoPDF from 'react-native-html-to-pdf';
+
 let tab = [];
 let tab2 = [];
 class Accueil extends React.Component {
@@ -54,6 +57,32 @@ class Accueil extends React.Component {
         this.props.navigation.navigate('estimerDouleur');
     
       }
+
+     /* async createPDF() {
+        let options = {
+          html: '<h1>PDF TEST</h1>'
+        }
+        RNHTMLtoPDF.convert(options).then(filePath => {
+
+          console.log('PDF generated', filePath);
+        
+        
+        
+          Share.open({
+        
+            title: "Share this!",
+        
+            message: "I just wanted to show you this:",
+        
+            url: filePath,
+        
+            subject: "I am only visible for emails :(",
+        
+          });
+        
+        });
+        };*/
+        
 
       componentDidMount(){
         //Requete activite
@@ -200,7 +229,7 @@ class Accueil extends React.Component {
     
               style={styles.button}
     
-              onPress={() => this._displayEstimer()}
+              onPress={() =>this._displayEstimer()}
     
               underlayColor="white">
     
@@ -226,7 +255,7 @@ class Accueil extends React.Component {
     
               style={styles.button}
     
-              //onPress={() => this._displayEstimer()}
+              onPress={() => this._displayEstimer()}
     
               underlayColor="white"
     

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { StyleSheet, ScrollView, ProgressBarAndroid, Dimensions, TouchableOpacity, Text, View, Modal } from 'react-native';
+import {AsyncStorage} from 'react-native';
 
 //Created components
 import ListeActivites from './ActiviteList';
@@ -42,15 +43,29 @@ class ConsulterActivites extends Component {
     };
   }
 
-  componentDidMount(){
+  componentDidMount = async () =>{
     this.props.navigation.setParams({requestUpdate: this._requestUpdate});
     //Requete activite
-    const getInfoJSON = Requests.getRequest();
+    let userId = await this._findUserId()
+    console.log("Voici Mon ID::", userId)
+    const getInfoJSON = Requests.getRequest(userId);
     getInfoJSON.then(respJson => {
       //set state activite
       this.setState({activite: respJson.reverse()});
     }).catch(err => console.log(err));
   }
+
+  _findUserId = async () => {
+    try {
+      let value = await AsyncStorage.getItem('id');
+      if (value !== null) {
+        console.log("Username : ",value);
+        return value
+      }
+    } catch (error) {
+      return error
+    }
+  };
 
   //Cette méthode sera appelée lorsqu’une activité aura eu une longue interaction avec la presse.
   //l'état modalShow passera à true montrant le modal
@@ -83,11 +98,12 @@ class ConsulterActivites extends Component {
     this.onHideModal();
   }
 
-  _requestUpdate = (request) => {
+  _requestUpdate = async (request) => {
     //Any kind of request done to the server
+    let userId = await this._findUserId()
     request.then(jsonResponse => {
       //Request
-      const getRequest = Requests.getRequest();
+      const getRequest = Requests.getRequest(userId);
       getRequest.then(respJson => {
         //Update state
         this.setState({activite: respJson.reverse()});
