@@ -80,7 +80,7 @@ class Profil extends Component {
                   if (message == "Utilisateur ajouté"){
                    // AsyncStorage.setItem('id', currentId); 
                     //currentId = await AsyncStorage.getItem('id');
-                    this.props.navigation.navigate("Accueil");
+                    this.props.navigation.navigate("Authentification");
                   }else{
                         console.log("Vérifier les infos!!")
                   }

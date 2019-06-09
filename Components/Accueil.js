@@ -1,12 +1,12 @@
 import React from 'react'
 import { Alert, StyleSheet, Text, View, TouchableHighlight, Image} from 'react-native'
 import PureChart from 'react-native-pure-chart';
-
+import {AsyncStorage} from 'react-native';
 import Requests from './../Requests'
 
 //import RNHTMLtoPDF from 'react-native-html-to-pdf';
 
-let tab = [];
+let sampleData = [];
 let tab2 = [];
 class Accueil extends React.Component {
   static navigationOptions = {
@@ -34,7 +34,7 @@ class Accueil extends React.Component {
     
           //activite: ["India","Pakistan","USA"],
           activite : [],
-          tab : [],
+          tabActivite : this.props.navigation.state.params.itemTabActivite,
     
         };
     
@@ -84,20 +84,23 @@ class Accueil extends React.Component {
         };*/
         
 
-      componentDidMount(){
+      componentDidMount = async () =>{
         //Requete activite
-        const getInfoJSON = Requests.getRequest();
-        getInfoJSON.then(respJson => {
+        let userId = await AsyncStorage.getItem('id');
+        console.log("Voici Mon ID::", userId)
+        const getInfoJSON = Requests.getRequest(userId);
+         getInfoJSON.then(respJson => {
           //set state activite
           this.setState({activite: respJson.reverse()});
           this.setState({tab : this.traitement()});
         console.log("tab", this.state.tab);
+        console.log("tab activité", this.state.activite)
         }).catch(err => console.log(err)); 
       tab2 = this.grapheDouleurApres();
       }
       grapheDouleurAvant(){
         let act = [];
-        this.state.activite.forEach((t) =>{
+        this.state.tabActivite.forEach((t) =>{
           act.push({x :t['date'], y : t['douleurAvant']*1})
         })
         console.log("douleur avant" +act);
@@ -106,7 +109,7 @@ class Accueil extends React.Component {
 
       grapheDouleurApres(){
         let act = [];
-        this.state.activite.forEach((t) =>{
+        this.state.tabActivite.forEach((t) =>{
           act.push({x :t['date'], y : t['douleurApres']*1})
         })
         return act;
@@ -119,53 +122,52 @@ class Accueil extends React.Component {
         console.log ("act", act)
         return act;
       }
-    render(){
-      console.log("Courbe 1", this.grapheDouleurAvant());
-      console.log("Courbe 2", this.grapheDouleurApres());
+ 
+   //console.log("sampledata",sampleData);
+    render() {
+      //this.componentDidMount()
+        //console.log("Courbe 1", this.grapheDouleurAvant());
+      // console.log("Courbe 2", this.grapheDouleurApres());
       console.log("tab", this.state.tab);
      // tab2 = this.grapheDouleurApres();
-      /*  let sampleData = [
+        let sampleData =[
              {
               seriesName: 'series1',
-              data: [this.state.tab],
+              data: this.grapheDouleurAvant(),
               color: '#297AB1'
             },
             {
               seriesName: 'series2',
-              data : [tab2], 
+              data : this.grapheDouleurApres(), 
               color: 'yellow'
             } 
         
              
         ];
-        console.log("sampledata",sampleData);*/
+        console.log("sampledata",sampleData);
 
-        let sampleData = [
+      /*  let sampleData = [
            {
             seriesName: 'series1',
-            data: [
-              {x: '2018-02-01', y: 20},
-              {x: '2018-02-02', y: 100},
-              {x: '2018-02-03', y: 140},
-              {x: '2018/02/04', y: 550},
-              {x: '2018-02-05', y: 40}
-            ],
+            data: [{x: '2018/02/01', y: 20},
+            {x: '2018/02/02', y: 100},
+            {x: '2018-02-03', y: 140},
+            {x: '2018/02/04', y: 550},
+            {x: '2018-02-05', y: 40}],
             color: '#297AB1'
           },
           {
             seriesName: 'series2',
-             data: [
-              {x: '2018-02-01', y: 20},
-              {x: '2018-02-02', y: 100},
-              {x: '2018-02-03', y: 140},
-              {x: '2018/02/04', y: 550},
-              {x: '2018-02-05', y: 40}
-            ], 
+             data: [{x: '2018/02/01', y: 20},
+             {x: '2018/02/02', y: 100},
+             {x: '2018-02-03', y: 140},
+             {x: '2018/02/04', y: 550},
+             {x: '2018-02-05', y: 40}], 
             color: 'yellow'
           } 
       
            
-      ];
+      ];*/
         return (
             <View style={styles.main_container}>
 

@@ -31,7 +31,7 @@ const ActiviteList = (props) => {
           return (
             <ListItem
             onPressRightIcon={() => navigation.navigate('DetailsActivite', {activites, title: "Details Activité", requestUpdate: navigation.getParam("requestUpdate")})} 
-              onLongPress={() => onShowModal(activites)}
+              onPress={() => onShowModal(activites)}
               key={_id} 
               containerStyle={[styles.listItem, {backgroundColor:'#C6FFCC'}]}
               rightIcon={{color: '#586F7C'}}

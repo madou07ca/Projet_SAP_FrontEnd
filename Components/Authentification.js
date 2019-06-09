@@ -5,6 +5,7 @@ import {AsyncStorage} from 'react-native';
 import { View, Text, TextInput, TouchableOpacity, Alert, Button ,StyleSheet ,StatusBar, Image} from 'react-native';
 
 import RequestUsers from './../RequestUsers'
+import Requests from './../Requests'
 
 
 
@@ -36,6 +37,7 @@ class Authentification extends Component {
           username : "",
           password : "",
           messageErreur : "",
+          tabActivite : [],
 
         };
         AsyncStorage.setItem('id', "");
@@ -69,7 +71,11 @@ class Authentification extends Component {
             currentId = await AsyncStorage.getItem('id');
              console.log("message::", message)
              console.log("id::", currentId)
-            this.props.navigation.navigate("Accueil");
+            await this._ChargementData(currentId)
+             console.log("YOUPI::", this.state.tabActivite)
+             console.log("message::", message)
+             console.log("id::", currentId)
+            this.props.navigation.navigate("Accueil", {itemTabActivite : this.state.tabActivite});
             //user.username = ""
             //user.password= ""
           }else{
@@ -90,6 +96,17 @@ class Authentification extends Component {
       }
         this._clear()
       };
+
+      _ChargementData = async (userId) =>{
+        console.log("YOUPI",userId)
+        //Requete sport
+        const getInfoJSON = Requests.getRequest(userId);
+        await getInfoJSON.then(respJson => {
+          //set state
+          this.setState({tabActivite: respJson.reverse()});
+        }).catch(err => console.log(err));
+    
+      }
 
       _clear() {
 
