@@ -1,6 +1,5 @@
 import React from 'react'
 import { Alert, StyleSheet, Text, View, TouchableHighlight, Image} from 'react-native'
-import PureChart from 'react-native-pure-chart';
 import {AsyncStorage} from 'react-native';
 import Requests from './../Requests'
 
@@ -30,11 +29,7 @@ class Accueil extends React.Component {
         super(props);
     
         this.state = {
- 
-    
-          //activite: ["India","Pakistan","USA"],
-          activite : [],
-          tabActivite : this.props.navigation.state.params.itemTabActivite,
+          tabActivite : [],
     
         };
     
@@ -55,6 +50,14 @@ class Accueil extends React.Component {
     _displayEstimer() {
 
         this.props.navigation.navigate('estimerDouleur');
+    
+      }
+      _displayStat = async () => {
+        let currentId = await AsyncStorage.getItem('id');
+        await this._ChargementData(currentId)
+        console.log("YOUPI::", this.state.tabActivite)
+        console.log("id::", currentId)
+        this.props.navigation.navigate("Stat", {itemTabActivite : this.state.tabActivite});
     
       }
 
@@ -86,7 +89,7 @@ class Accueil extends React.Component {
 
       componentDidMount = async () =>{
         //Requete activite
-        let userId = await AsyncStorage.getItem('id');
+        /* let userId = await AsyncStorage.getItem('id');
         console.log("Voici Mon ID::", userId)
         const getInfoJSON = Requests.getRequest(userId);
          getInfoJSON.then(respJson => {
@@ -96,9 +99,9 @@ class Accueil extends React.Component {
         console.log("tab", this.state.tab);
         console.log("tab activité", this.state.activite)
         }).catch(err => console.log(err)); 
-      tab2 = this.grapheDouleurApres();
+      tab2 = this.grapheDouleurApres(); */
       }
-      grapheDouleurAvant(){
+     /* grapheDouleurAvant(){
         let act = [];
         this.state.tabActivite.forEach((t) =>{
           act.push({x :t['date'], y : t['douleurAvant']*1})
@@ -121,53 +124,22 @@ class Accueil extends React.Component {
         })
         console.log ("act", act)
         return act;
+      }*/
+
+      _ChargementData = async (userId) =>{
+        console.log("YOUPI",userId)
+        //Requete sport
+        const getInfoJSON = Requests.getRequest(userId);
+        await getInfoJSON.then(respJson => {
+          //set state
+          this.setState({tabActivite: respJson.reverse()});
+        }).catch(err => console.log(err));
+    
       }
  
    //console.log("sampledata",sampleData);
     render() {
-      //this.componentDidMount()
-        //console.log("Courbe 1", this.grapheDouleurAvant());
-      // console.log("Courbe 2", this.grapheDouleurApres());
-      console.log("tab", this.state.tab);
-     // tab2 = this.grapheDouleurApres();
-        let sampleData =[
-             {
-              seriesName: 'series1',
-              data: this.grapheDouleurAvant(),
-              color: '#297AB1'
-            },
-            {
-              seriesName: 'series2',
-              data : this.grapheDouleurApres(), 
-              color: 'yellow'
-            } 
-        
-             
-        ];
-        console.log("sampledata",sampleData);
 
-      /*  let sampleData = [
-           {
-            seriesName: 'series1',
-            data: [{x: '2018/02/01', y: 20},
-            {x: '2018/02/02', y: 100},
-            {x: '2018-02-03', y: 140},
-            {x: '2018/02/04', y: 550},
-            {x: '2018-02-05', y: 40}],
-            color: '#297AB1'
-          },
-          {
-            seriesName: 'series2',
-             data: [{x: '2018/02/01', y: 20},
-             {x: '2018/02/02', y: 100},
-             {x: '2018-02-03', y: 140},
-             {x: '2018/02/04', y: 550},
-             {x: '2018-02-05', y: 40}], 
-            color: 'yellow'
-          } 
-      
-           
-      ];*/
         return (
             <View style={styles.main_container}>
 
@@ -226,6 +198,30 @@ class Accueil extends React.Component {
               </View>
     
             </TouchableHighlight>
+
+            <TouchableHighlight
+    
+              style={styles.button}
+    
+              onPress={() =>this._displayStat()}
+    
+              underlayColor="white">
+    
+              <View style={styles.TouchView}>
+    
+              <Text style={styles.text}>Voir mes Statistiques</Text>
+    
+                <Image
+    
+                  style={styles.image}
+    
+                  source={require("../images/Stat.jpg")}
+    
+                />
+    
+              </View>
+    
+            </TouchableHighlight>
     
             <TouchableHighlight
     
@@ -243,29 +239,9 @@ class Accueil extends React.Component {
     
                   style={styles.image}
     
-                  source={require("../images/douleur.jpg")}
+                  source={require("../images/loupe.jpg")}
     
                 />
-    
-              </View>
-    
-            </TouchableHighlight>
-    
-    
-    
-            <TouchableHighlight
-    
-              style={styles.button}
-    
-              onPress={() => this._displayEstimer()}
-    
-              underlayColor="white"
-    
-            >
-    
-              <View style={styles.graph}>
-    
-                <PureChart data={sampleData} type="line" />
     
               </View>
     
